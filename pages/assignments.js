@@ -69,14 +69,14 @@ const Assignments = () => {
     }
   }, [authReady, router, user])
 
-  if (!authReady || !user) {
-    return null
-  }
-
   const orderedAssignments = useMemo(
     () => [...assignments].sort((a, b) => a.dueDate.localeCompare(b.dueDate)),
     [assignments]
   )
+
+  if (!authReady || !user) {
+    return null
+  }
 
   function resetForm() {
     setFormValues(initialForm)

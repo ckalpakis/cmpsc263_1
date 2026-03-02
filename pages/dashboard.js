@@ -52,10 +52,6 @@ const Dashboard = () => {
     }
   }, [authReady, router, user])
 
-  if (!authReady || !user) {
-    return null
-  }
-
   const stats = useMemo(() => {
     const completed = assignments.filter((item) => item.completed).length
     const upcoming = assignments.filter((item) => !item.completed).length
@@ -67,6 +63,10 @@ const Dashboard = () => {
       { label: 'Storage', value: 'Firestore' },
     ]
   }, [assignments, isLoading])
+
+  if (!authReady || !user) {
+    return null
+  }
 
   return (
     <AppLayout
