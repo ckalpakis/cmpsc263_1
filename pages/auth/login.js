@@ -1,4 +1,4 @@
-/* Login page providing a working sign-in flow with Firebase auth or demo auth fallback. */
+/* Login page providing the Firebase-backed sign-in flow for the final app. */
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/Dashboard/Navbar'
@@ -8,7 +8,7 @@ import { useStateContext } from '@/context/StateContext'
 
 const Login = () => {
   const router = useRouter()
-  const { setUser, authMode } = useStateContext()
+  const { setUser, authConfigured } = useStateContext()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -44,7 +44,11 @@ const Login = () => {
         password={password}
         error={error}
         isSubmitting={isSubmitting}
-        helperText={`Use your account to sync work. Current mode: ${authMode === 'firebase' ? 'Firebase authentication' : 'demo authentication fallback'}.`}
+        helperText={
+          authConfigured
+            ? 'Sign in with your Firebase account to access your assignments and dashboard.'
+            : 'Firebase is not configured correctly yet. Add the required environment variables before signing in.'
+        }
         onEmailChange={setEmail}
         onPasswordChange={setPassword}
         onSubmit={handleSubmit}

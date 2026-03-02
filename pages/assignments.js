@@ -1,5 +1,6 @@
 /* Assignments page for creating, editing, completing, reading, and deleting persisted study tasks. */
 import React, { useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/router'
 import styled, { css } from 'styled-components'
 import AppLayout from '@/components/Layout/AppLayout'
 import { useStateContext } from '@/context/StateContext'
@@ -17,8 +18,8 @@ const initialForm = {
 }
 
 const Assignments = () => {
-  const { user, authReady, authMode } = useStateContext()
-  const ownerId = user?.uid || 'guest'
+  const router = useRouter()
+  const { user, authReady } = useStateContext()
 
   const [assignments, setAssignments] = useState([])
   const [formValues, setFormValues] = useState(initialForm)
@@ -33,6 +34,11 @@ const Assignments = () => {
       return
     }
 
+    if (!user) {
+      router.replace('/auth/login')
+      return
+    }
+
     let isMounted = true
 
     async function loadAssignmentsList() {
@@ -40,7 +46,7 @@ const Assignments = () => {
       setError('')
 
       try {
-        const records = await getAssignments(ownerId)
+        const records = await getAssignments(user.uid)
         if (isMounted) {
           setAssignments(records)
         }
@@ -61,7 +67,11 @@ const Assignments = () => {
     return () => {
       isMounted = false
     }
-  }, [authReady, ownerId])
+  }, [authReady, router, user])
+
+  if (!authReady || !user) {
+    return null
+  }
 
   const orderedAssignments = useMemo(
     () => [...assignments].sort((a, b) => a.dueDate.localeCompare(b.dueDate)),
@@ -107,7 +117,7 @@ const Assignments = () => {
     try {
       if (editingId) {
         const currentRecord = assignments.find((assignment) => assignment.id === editingId)
-        const updatedAssignment = await updateAssignment(ownerId, editingId, {
+        const updatedAssignment = await updateAssignment(user.uid, editingId, {
           ...payload,
           completed: currentRecord?.completed || false,
         })
@@ -119,7 +129,7 @@ const Assignments = () => {
         )
         setStatusMessage('Assignment updated successfully.')
       } else {
-        const newAssignment = await createAssignment(ownerId, payload)
+        const newAssignment = await createAssignment(user.uid, payload)
         setAssignments((currentAssignments) => [...currentAssignments, newAssignment])
         setStatusMessage('Assignment created successfully.')
       }
@@ -147,7 +157,7 @@ const Assignments = () => {
     setStatusMessage('')
 
     try {
-      await removeAssignment(ownerId, assignmentId)
+      await removeAssignment(user.uid, assignmentId)
       setAssignments((currentAssignments) =>
         currentAssignments.filter((assignment) => assignment.id !== assignmentId)
       )
@@ -165,7 +175,7 @@ const Assignments = () => {
     setStatusMessage('')
 
     try {
-      const updatedAssignment = await updateAssignment(ownerId, assignment.id, {
+      const updatedAssignment = await updateAssignment(user.uid, assignment.id, {
         title: assignment.title,
         dueDate: assignment.dueDate,
         description: assignment.description || '',
@@ -187,8 +197,7 @@ const Assignments = () => {
     <AppLayout
       eyebrow='Assignments'
       title='Capture work once, then keep it moving.'
-      description='This page demonstrates persistent database reads and writes. Signed-in Firebase users store to Firestore, while guests and demo users store locally so the workflow remains fully usable.'
-      actions={<ModePill>{user && authMode === 'firebase' ? 'Firestore sync' : 'Local persistence'}</ModePill>}
+      description='This page demonstrates persistent database reads and writes. Every assignment is stored in Cloud Firestore under the signed-in user account.'
     >
       <Panels>
         <FormCard onSubmit={handleSubmit}>
@@ -242,7 +251,7 @@ const Assignments = () => {
 
         <ListCard>
           <SectionHeader>Your assignments</SectionHeader>
-          <SubtleText>{user ? `Signed in as ${user.email}` : 'Browsing as guest'}</SubtleText>
+          <SubtleText>Signed in as {user.email}</SubtleText>
 
           {isLoading && <SubtleText>Loading assignments...</SubtleText>}
           {!isLoading && orderedAssignments.length === 0 && (
@@ -279,15 +288,6 @@ const Assignments = () => {
     </AppLayout>
   )
 }
-
-const ModePill = styled.span`
-  border: 1px solid var(--line);
-  background: var(--bg-soft);
-  color: var(--muted);
-  border-radius: 999px;
-  padding: 7px 10px;
-  font-size: 0.8rem;
-`
 
 const Panels = styled.section`
   display: grid;

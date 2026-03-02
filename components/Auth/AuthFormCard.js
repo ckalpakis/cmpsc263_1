@@ -53,7 +53,7 @@ const AuthFormCard = ({
             <PrimaryButton type='submit' disabled={isSubmitting}>
               {isSubmitting ? 'Please wait...' : isLogin ? 'Sign In' : 'Create Account'}
             </PrimaryButton>
-            <SecondaryLink href='/dashboard'>Continue as Guest</SecondaryLink>
+            <SecondaryLink href='/'>Back to Home</SecondaryLink>
           </ButtonRow>
         </Form>
 

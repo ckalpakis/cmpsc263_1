@@ -1,4 +1,4 @@
-/* Signup page providing a working registration flow with Firebase auth or demo auth fallback. */
+/* Signup page providing the Firebase-backed registration flow for the final app. */
 import React, { useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/Dashboard/Navbar'
@@ -8,7 +8,7 @@ import { useStateContext } from '@/context/StateContext'
 
 const Signup = () => {
   const router = useRouter()
-  const { setUser, authMode } = useStateContext()
+  const { setUser, authConfigured } = useStateContext()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -59,7 +59,11 @@ const Signup = () => {
         password={password}
         error={error}
         isSubmitting={isSubmitting}
-        helperText={`Create an account to separate your assignment history. Current mode: ${authMode === 'firebase' ? 'Firebase authentication' : 'demo authentication fallback'}.`}
+        helperText={
+          authConfigured
+            ? 'Create a Firebase account to save assignments under your profile.'
+            : 'Firebase is not configured correctly yet. Add the required environment variables before creating accounts.'
+        }
         onEmailChange={setEmail}
         onPasswordChange={setPassword}
         onSubmit={handleSubmit}

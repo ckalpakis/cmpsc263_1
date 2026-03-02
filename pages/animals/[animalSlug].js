@@ -1,4 +1,4 @@
-/* Dynamic demo page showing API routing and loading a selected animal profile from a Next.js endpoint. */
+/* Dynamic page showing API routing and loading a selected animal profile from a Next.js endpoint. */
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useRouter } from 'next/router'

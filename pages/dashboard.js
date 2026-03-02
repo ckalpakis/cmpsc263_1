@@ -1,5 +1,6 @@
 /* Dashboard page showing account status, task summary, and live external API widgets. */
 import React, { useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import Link from 'next/link'
 import AppLayout from '@/components/Layout/AppLayout'
@@ -9,14 +10,18 @@ import { useStateContext } from '@/context/StateContext'
 import { getAssignments } from '@/backend/Database'
 
 const Dashboard = () => {
-  const { user, authReady, authMode } = useStateContext()
+  const router = useRouter()
+  const { user, authReady } = useStateContext()
   const [assignments, setAssignments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
 
-  const ownerId = user?.uid || 'guest'
-
   useEffect(() => {
     if (!authReady) {
+      return
+    }
+
+    if (!user) {
+      router.replace('/auth/login')
       return
     }
 
@@ -25,7 +30,7 @@ const Dashboard = () => {
     async function loadAssignments() {
       setIsLoading(true)
       try {
-        const records = await getAssignments(ownerId)
+        const records = await getAssignments(user.uid)
         if (isMounted) {
           setAssignments(records)
         }
@@ -45,7 +50,11 @@ const Dashboard = () => {
     return () => {
       isMounted = false
     }
-  }, [authReady, ownerId])
+  }, [authReady, router, user])
+
+  if (!authReady || !user) {
+    return null
+  }
 
   const stats = useMemo(() => {
     const completed = assignments.filter((item) => item.completed).length
@@ -55,16 +64,15 @@ const Dashboard = () => {
       { label: 'Assignments', value: isLoading ? '...' : String(assignments.length) },
       { label: 'Open tasks', value: isLoading ? '...' : String(upcoming) },
       { label: 'Completed', value: isLoading ? '...' : String(completed) },
-      { label: 'Storage', value: user && authMode === 'firebase' ? 'Firestore' : 'Local demo' },
+      { label: 'Storage', value: 'Firestore' },
     ]
-  }, [assignments, isLoading, user, authMode])
+  }, [assignments, isLoading])
 
   return (
     <AppLayout
       eyebrow='Dashboard'
       title='A daily command center for your workload.'
       description='Track assignment volume, check live planning signals, and move directly into task management. This page demonstrates React hooks, shared components, and external API integrations.'
-      actions={<ModePill>{user ? user.email : 'Guest session'}</ModePill>}
     >
       <StatsGrid>
         {stats.map((item) => (
@@ -90,15 +98,6 @@ const Dashboard = () => {
     </AppLayout>
   )
 }
-
-const ModePill = styled.span`
-  border: 1px solid var(--line);
-  background: var(--bg-soft);
-  color: var(--muted);
-  border-radius: 999px;
-  padding: 7px 10px;
-  font-size: 0.8rem;
-`
 
 const StatsGrid = styled.section`
   display: grid;

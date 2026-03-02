@@ -14,7 +14,7 @@ const navItems = [
 
 const Navbar = () => {
   const router = useRouter()
-  const { user, setUser, authMode } = useStateContext()
+  const { user, setUser } = useStateContext()
 
   async function handleLogout() {
     try {
@@ -39,7 +39,6 @@ const Navbar = () => {
         </LinkRow>
 
         <RightSide>
-          <ModeBadge>{authMode === 'firebase' ? 'Firebase ready' : 'Demo auth mode'}</ModeBadge>
           {user ? (
             <>
               <UserChip>{user.email}</UserChip>
@@ -121,15 +120,6 @@ const RightSide = styled.div`
   justify-content: flex-end;
   gap: 8px;
   flex-wrap: wrap;
-`
-
-const ModeBadge = styled.span`
-  font-size: 0.75rem;
-  color: var(--muted);
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 6px 9px;
-  background: var(--bg-soft);
 `
 
 const UserChip = styled.span`

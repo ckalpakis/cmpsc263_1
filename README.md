@@ -5,9 +5,8 @@ StudyBuddy is a full-stack student planning application built with Next.js, Reac
 ## Core Features
 - Multi-page frontend with navigable routes: Home, Dashboard, Assignments, About, Login, Signup.
 - Authentication flow with Firebase Auth when configured.
-- Demo auth fallback using local storage so the full auth UX still works during local demos.
-- Assignment CRUD with Firestore when Firebase is configured.
-- Local persistence fallback for guest sessions and demo mode.
+- Firebase Authentication for signup, login, and logout.
+- Assignment CRUD with Firestore persistence per signed-in user.
 - Two external API integrations displayed on the dashboard:
   - Open-Meteo weather data
   - Open Library study resource search
@@ -39,7 +38,7 @@ Create a `.env.local` file in the project root and provide:
 - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID`
 - `NEXT_PUBLIC_FIREBASE_APP_ID`
 
-If these values are not present, the app automatically runs in demo mode so login/signup and assignment persistence are still functional for local review.
+If these values are not present, Firebase-backed features will not initialize correctly.
 
 ## Rubric Coverage
 - Frontend: more than 3 navigable pages with polished UI and reusable components.
@@ -50,7 +49,7 @@ If these values are not present, the app automatically runs in demo mode so logi
 - APIs: weather and study resources are loaded from external services.
 
 ## Presentation Notes
-- Demo route for core functionality: `/dashboard`
+- Primary route for core functionality: `/dashboard`
 - CRUD workflow: `/assignments`
 - Auth workflow: `/auth/signup` and `/auth/login`
 - Project overview: `/about`

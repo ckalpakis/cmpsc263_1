@@ -11,11 +11,11 @@ const features = [
   },
   {
     title: 'Real auth flow',
-    text: 'Users can sign up and sign in with Firebase or the built-in demo mode when Firebase is not configured yet.',
+    text: 'Users sign up and sign in with Firebase Authentication for a real account experience.',
   },
   {
     title: 'Persistent assignments',
-    text: 'Assignments save to Firestore when available, with local fallback so the app still works in demos.',
+    text: 'Assignments are stored in Cloud Firestore so work stays tied to each signed-in user.',
   },
   {
     title: 'Live API widgets',
@@ -30,8 +30,7 @@ export default function Home() {
     <AppLayout
       eyebrow='Student productivity workspace'
       title='A focused planner for classes, deadlines, and daily execution.'
-      description='StudyBuddy is a full-stack student planning app built with Next.js, React, Node, and Firebase-ready services. It combines account management, live data, and task tracking in one clean workspace.'
-      actions={<StatusPill>{user ? `Signed in as ${user.email}` : 'Guest browsing available'}</StatusPill>}
+      description='StudyBuddy is a full-stack student planning app built with Next.js, React, Node, and Firebase services. It combines account management, live data, and task tracking in one clean workspace.'
     >
       <HeroSection>
         <ButtonRow>
@@ -55,15 +54,6 @@ export default function Home() {
 
 const HeroSection = styled.section`
   margin-top: 8px;
-`
-
-const StatusPill = styled.span`
-  border: 1px solid var(--line);
-  background: var(--bg-soft);
-  color: var(--muted);
-  border-radius: 999px;
-  padding: 7px 10px;
-  font-size: 0.8rem;
 `
 
 const ButtonRow = styled.div`

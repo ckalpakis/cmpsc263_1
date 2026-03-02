@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import { onIdTokenChanged } from 'firebase/auth'
 import { auth, isFirebaseConfigured } from '@/backend/Firebase'
-import { getPersistedDemoUser } from '@/backend/Auth'
 
 const Context = createContext()
 
@@ -11,15 +10,9 @@ export const StateContext = ({ children }) => {
 
   useEffect(() => {
     if (!auth) {
-      setUser(getPersistedDemoUser())
+      setUser(null)
       setAuthReady(true)
-
-      const syncDemoSession = () => {
-        setUser(getPersistedDemoUser())
-      }
-
-      window.addEventListener('storage', syncDemoSession)
-      return () => window.removeEventListener('storage', syncDemoSession)
+      return
     }
 
     const unsubscribe = onIdTokenChanged(auth, (firebaseUser) => {
@@ -36,7 +29,7 @@ export const StateContext = ({ children }) => {
         user,
         setUser,
         authReady,
-        authMode: isFirebaseConfigured ? 'firebase' : 'demo',
+        authConfigured: isFirebaseConfigured,
       }}
     >
       {children}
