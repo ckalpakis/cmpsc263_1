@@ -1,35 +1,22 @@
-import React from 'react';
-import Link  from 'next/link';
-import { IoMdHome } from 'react-icons/io'; // Importing a home icon from react-icons
-import styled from 'styled-components';
+import React from 'react'
+import Link from 'next/link'
+import styled from 'styled-components'
 
-const Home = () => {
-  return (
-    <Square href="/dashboard">
-      <IoMdHome />
-    </Square>
-  );
-};
+const HomeShortcut = () => {
+  return <Shortcut href='/dashboard'>Go to dashboard</Shortcut>
+}
 
-const Square = styled(Link)`
-  display: flex;
+const Shortcut = styled(Link)`
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 50px; // Adjust the size as needed
-  height: 50px; // Adjust the size as needed
-  background-color: #007bff; // Adjust the background color as needed
-  color: white;
-  border-radius: 4px; // Adjust for square or rounded corners
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
   text-decoration: none;
-  
-  svg {
-    width: 24px; // Adjust icon size as needed
-    height: 24px; // Adjust icon size as needed
-  }
+  font-weight: 600;
+`
 
-  &:hover {
-    background-color: #0056b3; // Adjust hover effect as needed
-  }
-`;
-
-export default Home;
+export default HomeShortcut

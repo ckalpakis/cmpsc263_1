@@ -1,53 +1,31 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 const Footer = () => {
   return (
     <FooterSection>
       <FooterContainer>
-        <LeftContainer>
-          © {new Date().getFullYear()} CMPSC 263
-        </LeftContainer>
-        <CenterContainer>
-          <Link href="#">Privacy Policy</Link> | <Link href="#">Terms of Service</Link>
-        </CenterContainer>
-        <RightContainer>
-          <SocialIcon href="#" aria-label="Facebook">FB</SocialIcon>
-          <SocialIcon href="#" aria-label="Twitter">TW</SocialIcon>
-          <SocialIcon href="#" aria-label="Instagram">IG</SocialIcon>
-        </RightContainer>
+        <span>© {new Date().getFullYear()} StudyBuddy</span>
+        <span>Built for student planning and deadline management.</span>
       </FooterContainer>
     </FooterSection>
-  );
-};
+  )
+}
 
 const FooterSection = styled.footer`
-
-`;
+  border-top: 1px solid var(--line);
+  margin-top: 32px;
+`
 
 const FooterContainer = styled.div`
+  width: min(1040px, 100% - 32px);
+  margin: 0 auto;
+  padding: 18px 0 28px;
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+`
 
-`;
-
-const LeftContainer = styled.div``;
-
-const CenterContainer = styled.div``;
-
-const RightContainer = styled.div`
-
-`;
-
-const Link = styled.a`
-
-`;
-
-const SocialIcon = styled.a`
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.5rem;
-  &:hover {
-    color: #007bff;
-  }
-`;
-
-export default Footer;
+export default Footer

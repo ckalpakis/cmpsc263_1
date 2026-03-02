@@ -1,58 +1,44 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import Link from 'next/link'
+import styled from 'styled-components'
 
-const Hero = ({text}) => {
+const Hero = ({ heading = 'Plan your academic week with clarity.', subheading = 'Stay focused with a calmer workflow built for students.' }) => {
   return (
     <Section>
-      <Overlay>
-        <Container>
-          <HeroTextColumn>
-            <Header>
-              {text}
-              <Highlight>Start Here</Highlight>
-            </Header>
-            <SubheaderAndStarsColumn>
-              <SubHeader>Insert creative subheader here</SubHeader>
-              <CTAButton>Get Started</CTAButton>
-            </SubheaderAndStarsColumn>
-          </HeroTextColumn>
-        </Container>
-      </Overlay>
+      <Heading>{heading}</Heading>
+      <Subheading>{subheading}</Subheading>
+      <ActionLink href='/dashboard'>Open dashboard</ActionLink>
     </Section>
-  );
-};
+  )
+}
 
 const Section = styled.section`
-background-color: blue;
-width: 100%;
-height: 10vh;
-`;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+  padding: 20px;
+`
 
-const Overlay = styled.div`
-`;
+const Heading = styled.h1`
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+`
 
-const Container = styled.div`
-`;
+const Subheading = styled.p`
+  margin-top: 10px;
+  color: var(--muted);
+`
 
-const HeroTextColumn = styled.div`
-`;
+const ActionLink = styled(Link)`
+  display: inline-block;
+  margin-top: 14px;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+`
 
-const Header = styled.h1`
-`;
-
-const Highlight = styled.span`
-`;
-
-const SubHeader = styled.h2`
-
-`;
-
-const SubheaderAndStarsColumn = styled.div`
-
-`;
-
-const CTAButton = styled.button`
-
-`;
-
-export default Hero;
+export default Hero

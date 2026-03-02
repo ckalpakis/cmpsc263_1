@@ -1,47 +1,47 @@
-import { useRouter } from 'next/router';
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { onIdTokenChanged } from 'firebase/auth';
-import {auth} from '@/backend/Firebase'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { onIdTokenChanged } from 'firebase/auth'
+import { auth, isFirebaseConfigured } from '@/backend/Firebase'
+import { getPersistedDemoUser } from '@/backend/Auth'
 
-const Context = createContext();
+const Context = createContext()
 
 export const StateContext = ({ children }) => {
-
-  // Variables to Carry Across Multiple Pages
   const [user, setUser] = useState(undefined)
+  const [authReady, setAuthReady] = useState(false)
 
-  const router = useRouter()
-  const { asPath } = useRouter()
+  useEffect(() => {
+    if (!auth) {
+      setUser(getPersistedDemoUser())
+      setAuthReady(true)
 
-  // AUTHENTICATION REMEMBER ME USEEFFECT
-  // useEffect(() => {
-  //   const unsubscribe = onIdTokenChanged(auth, (user) => {
-  //     if(user){
-  //       console.log('Token or user state changed:', user)
-  //       user.getIdToken().then((token) => {
-  //         console.log('New ID token:', token)
-  //       })
-  //       setUser(user)
-  //     } else {
-  //       setUser(null) //there is no user signed in
-  //     }
-  //   });
-  //   return () => unsubscribe();
-  // }, []);
+      const syncDemoSession = () => {
+        setUser(getPersistedDemoUser())
+      }
 
+      window.addEventListener('storage', syncDemoSession)
+      return () => window.removeEventListener('storage', syncDemoSession)
+    }
 
+    const unsubscribe = onIdTokenChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser || null)
+      setAuthReady(true)
+    })
 
+    return () => unsubscribe()
+  }, [])
 
-return(
+  return (
     <Context.Provider
-    value={{
+      value={{
         user,
-        setUser
-    }}
+        setUser,
+        authReady,
+        authMode: isFirebaseConfigured ? 'firebase' : 'demo',
+      }}
     >
       {children}
     </Context.Provider>
-    )
+  )
 }
 
-export const useStateContext = () => useContext(Context);
+export const useStateContext = () => useContext(Context)
